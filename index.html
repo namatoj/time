@@ -1,0 +1,91 @@
+<html>
+    <head>
+<style>
+* { margin: 0; padding: 0;}
+
+body, html { height:100%; }
+
+#canvas {
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+</style>
+
+    </head>
+    <body>
+        <canvas id="canvas"> </canvas>
+    </body>
+
+<script>
+const c = document.getElementById("canvas");
+c.width = window.innerWidth * 2;
+c.height = window.innerHeight * 2;
+
+const radius = Math.min(c.width / 2, c.height / 2) * 0.95;
+
+var ctx = c.getContext("2d");
+ctx.lineWidth = 20;
+
+function drawCircle(fraction, size) {
+ctx.beginPath();
+ctx.arc(
+    c.width / 2, 
+    c.height / 2, 
+    size, 
+    2 * Math.PI / 4 * 3,
+    2 * Math.PI * fraction - 2 * Math.PI / 4);
+ctx.stroke();
+}
+
+function drawSeconds(date) {
+    let seconds = date.getSeconds() + date.getMilliseconds() / 1000;
+    drawCircle(seconds  / 60, 0.6 * radius);
+}
+
+function drawMinutes(date) {
+    let minutes = date.getMinutes() + date.getSeconds() / 60 + date.getMilliseconds() / 1000 / 60;
+    drawCircle(minutes / 60, 0.7 * radius);
+}
+
+
+function drawHours(date) {
+    let seconds = date.getHours() + date.getMinutes() / 60;
+    drawCircle(seconds / 24, 0.8 * radius);
+}
+
+function drawDays(date) {
+    let days = calculateDays() + date.getHours() / 24;
+    drawCircle(days / 365, 0.9 * radius);
+}
+
+function calculateDays() {
+    var today = new Date();
+    var firstDay = new Date(today.getFullYear(), 0, 1);
+    var days = Math.ceil(daysBetween(firstDay, today));
+    return days;
+}
+
+function treatAsUTC(date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+}
+
+function daysBetween(startDate, endDate) {
+    var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+}
+
+setInterval(() => {
+    ctx.clearRect(0, 0, c.width, c.height);
+    let date = new Date();
+    drawSeconds(date);
+    drawMinutes(date);
+    drawHours(date);
+    drawDays(date);
+}, 10);
+
+</script>
+
+</html>
