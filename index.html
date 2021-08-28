@@ -18,24 +18,55 @@ body, html { height:100%; }
     </body>
 
 <script>
+
+const scale = 2;
 const c = document.getElementById("canvas");
-c.width = window.innerWidth * 2;
-c.height = window.innerHeight * 2;
+c.width = window.innerWidth * scale;
+c.height = window.innerHeight * scale;
 
 const radius = Math.min(c.width / 2, c.height / 2) * 0.95;
+const unit = radius / 100
 
 var ctx = c.getContext("2d");
-ctx.lineWidth = 20;
+
+let origo_x = c.width / 2;
+let origo_y = c.height / 2;
+
 
 function drawCircle(fraction, size) {
-ctx.beginPath();
-ctx.arc(
-    c.width / 2, 
-    c.height / 2, 
-    size, 
-    2 * Math.PI / 4 * 3,
-    2 * Math.PI * fraction - 2 * Math.PI / 4);
-ctx.stroke();
+    ctx.lineWidth = 9 * unit;
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
+    ctx.arc(
+        origo_x, 
+        origo_y, 
+        size, 
+        2 * Math.PI / 4 * 3,
+        2 * Math.PI * fraction - 2 * Math.PI / 4);
+    ctx.stroke();
+}
+
+function drawLines(steps, lines, radius, style) {
+    ctx.strokeStyle = style;
+
+    for (let x = 0; x < lines; x++) { 
+        lineWidth = 0.2 * unit;
+
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+        let angle = - 2 * Math.PI / steps * x;
+       
+        ctx.moveTo(
+            origo_x + radius * 0.97 * Math.sin(angle + Math.PI), 
+            origo_y + radius * 0.97 * Math.cos(angle + Math.PI)
+        )
+        ctx.lineTo(
+            origo_x + radius * 1.03 * Math.sin(angle + Math.PI), 
+            origo_y + radius * 1.03 * Math.cos(angle + Math.PI)
+        )
+
+    ctx.stroke();
+    }
 }
 
 function drawSeconds(date) {
@@ -50,12 +81,12 @@ function drawMinutes(date) {
 
 
 function drawHours(date) {
-    let seconds = date.getHours() + date.getMinutes() / 60;
+    let seconds = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 60 / 60 + date.getMilliseconds() / 60 / 60 / 1000;
     drawCircle(seconds / 24, 0.8 * radius);
 }
 
 function drawDays(date) {
-    let days = calculateDays() + date.getHours() / 24;
+    let days = calculateDays() + date.getHours() / 24 + date.getMinutes() / 60 / 24  + date.getSeconds() / 60 / 60 / 24 + date.getMilliseconds() / 1000 / 60 / 60 / 24;
     drawCircle(days / 365, 0.9 * radius);
 }
 
@@ -84,7 +115,11 @@ setInterval(() => {
     drawMinutes(date);
     drawHours(date);
     drawDays(date);
-}, 10);
+
+    drawLines(60, date.getSeconds() + 1 , 0.6 * radius, "#ffffff");
+    drawLines(12, (date.getMinutes() + 1)/5 , 0.7 * radius, "#ffffff");
+    drawLines(24, date.getHours() + 1, 0.8 * radius, "#ffffff");
+}, 20);
 
 </script>
 
