@@ -97,8 +97,9 @@ function getDaysInCurrentYear() {
 }
 
 function drawHours(date) {
-    let seconds = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 60 / 60 + date.getMilliseconds() / 60 / 60 / 1000;
-    drawCircle(seconds / 24, 0.8 * radius);
+    let hours = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 60 / 60 + date.getMilliseconds() / 60 / 60 / 1000;
+    let hours_12 = hours % 12; 
+    drawCircle(hours_12 / 12, 0.8 * radius);
 }
 
 function drawDays(date) {
@@ -145,7 +146,6 @@ function drawMonthMarkers() {
     for (let x = 0; x < steps; x++) {
         if (firstDayOfMonths.includes(x)) {
             let angle = - 2 * Math.PI / steps * x;
-            console.log(angle, radius, x)
             drawLine(angle, 0.9 * radius, "#ffffff");
         }
     }
@@ -161,7 +161,7 @@ setInterval(() => {
 
     drawLines(60, 0.6 * radius, "#ffffff");
     drawLines(12, 0.7 * radius, "#ffffff");
-    drawLines(24, 0.8 * radius, "#ffffff");
+    drawLines(12, 0.8 * radius, "#ffffff");
     drawMonthMarkers();
 }, 20);
 
