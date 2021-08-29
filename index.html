@@ -46,9 +46,9 @@ function drawCircle(fraction, size) {
     ctx.stroke();
 }
 
-function drawLines(steps, lines, radius, style) {
+function drawLines(steps, radius, style) {
 
-    for (let x = 0; x < lines; x++) { 
+    for (let x = 0; x < steps; x++) { 
         let angle = - 2 * Math.PI / steps * x;
         drawLine(angle, radius, style); 
     }
@@ -159,9 +159,9 @@ setInterval(() => {
     drawHours(date);
     drawDays(date);
 
-    drawLines(60, date.getSeconds() + 1 , 0.6 * radius, "#ffffff");
-    drawLines(12, (date.getMinutes() + 1)/5 , 0.7 * radius, "#ffffff");
-    drawLines(24, date.getHours() + 1, 0.8 * radius, "#ffffff");
+    drawLines(60, 0.6 * radius, "#ffffff");
+    drawLines(12, 0.7 * radius, "#ffffff");
+    drawLines(24, 0.8 * radius, "#ffffff");
     drawMonthMarkers();
 }, 20);
 
