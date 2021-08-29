@@ -50,7 +50,7 @@ function drawLines(steps, lines, radius, style) {
     ctx.strokeStyle = style;
 
     for (let x = 0; x < lines; x++) { 
-        lineWidth = 0.2 * unit;
+        lineWidth = 0.4 * unit;
 
         ctx.lineWidth = lineWidth;
         ctx.beginPath();
@@ -79,6 +79,18 @@ function drawMinutes(date) {
     drawCircle(minutes / 60, 0.7 * radius);
 }
 
+function getDaysInCurrentYear() {
+    let today = new Date()
+    let currentYear = today.getFullYear()
+    if (currentYear % 4 != 0 ) {
+        return 365
+    } else if (currentYear % 100 != 0) {
+        return 366
+    } else if (currentYear % 400 != 0) {
+        return 365
+    }
+    return 366
+}
 
 function drawHours(date) {
     let seconds = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 60 / 60 + date.getMilliseconds() / 60 / 60 / 1000;
@@ -87,7 +99,7 @@ function drawHours(date) {
 
 function drawDays(date) {
     let days = calculateDays() + date.getHours() / 24 + date.getMinutes() / 60 / 24  + date.getSeconds() / 60 / 60 / 24 + date.getMilliseconds() / 1000 / 60 / 60 / 24;
-    drawCircle(days / 365, 0.9 * radius);
+    drawCircle(days / getDaysInCurrentYear(), 0.9 * radius);
 }
 
 function calculateDays() {
@@ -119,6 +131,7 @@ setInterval(() => {
     drawLines(60, date.getSeconds() + 1 , 0.6 * radius, "#ffffff");
     drawLines(12, (date.getMinutes() + 1)/5 , 0.7 * radius, "#ffffff");
     drawLines(24, date.getHours() + 1, 0.8 * radius, "#ffffff");
+    drawLines(getDaysInCurrentYear(), calculateDays() + 1, 0.9 * radius, "#ffffff");
 }, 20);
 
 </script>
