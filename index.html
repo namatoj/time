@@ -47,26 +47,30 @@ function drawCircle(fraction, size) {
 }
 
 function drawLines(steps, lines, radius, style) {
-    ctx.strokeStyle = style;
 
     for (let x = 0; x < lines; x++) { 
-        lineWidth = 0.4 * unit;
-
-        ctx.lineWidth = lineWidth;
-        ctx.beginPath();
         let angle = - 2 * Math.PI / steps * x;
-       
-        ctx.moveTo(
-            origo_x + radius * 0.97 * Math.sin(angle + Math.PI), 
-            origo_y + radius * 0.97 * Math.cos(angle + Math.PI)
-        )
-        ctx.lineTo(
-            origo_x + radius * 1.03 * Math.sin(angle + Math.PI), 
-            origo_y + radius * 1.03 * Math.cos(angle + Math.PI)
-        )
+        drawLine(angle, radius, style); 
+    }
+}
+
+function drawLine(angle, radius, style) {
+    ctx.strokeStyle = style;
+    lineWidth = 0.4 * unit;
+
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+   
+    ctx.moveTo(
+        origo_x + radius * 0.97 * Math.sin(angle + Math.PI), 
+        origo_y + radius * 0.97 * Math.cos(angle + Math.PI)
+    )
+    ctx.lineTo(
+        origo_x + radius * 1.03 * Math.sin(angle + Math.PI), 
+        origo_y + radius * 1.03 * Math.cos(angle + Math.PI)
+    )
 
     ctx.stroke();
-    }
 }
 
 function drawSeconds(date) {
@@ -120,6 +124,33 @@ function daysBetween(startDate, endDate) {
     return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
 }
 
+function drawMonthMarkers() {
+    let firstDayOfMonths = [
+        0,
+        0 + 31,
+        0 + 31  + 28,
+        0 + 31  + 28  + 31,
+        0 + 31  + 28  + 31  + 30,
+        0 + 31  + 28  + 31  + 30  + 31,
+        0 + 31  + 28  + 31  + 30  + 31  + 30,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31  + 31,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31  + 31  + 30,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31  + 31  + 30  + 31,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31  + 31  + 30  + 31  + 30,
+        0 + 31  + 28  + 31  + 30  + 31  + 30  + 31  + 31  + 30  + 31  + 30  + 31,
+    ];
+    let steps = getDaysInCurrentYear();
+
+    for (let x = 0; x < steps; x++) {
+        if (firstDayOfMonths.includes(x)) {
+            let angle = - 2 * Math.PI / steps * x;
+            console.log(angle, radius, x)
+            drawLine(angle, 0.9 * radius, "#ffffff");
+        }
+    }
+}
+
 setInterval(() => {
     ctx.clearRect(0, 0, c.width, c.height);
     let date = new Date();
@@ -131,7 +162,7 @@ setInterval(() => {
     drawLines(60, date.getSeconds() + 1 , 0.6 * radius, "#ffffff");
     drawLines(12, (date.getMinutes() + 1)/5 , 0.7 * radius, "#ffffff");
     drawLines(24, date.getHours() + 1, 0.8 * radius, "#ffffff");
-    drawLines(getDaysInCurrentYear(), calculateDays() + 1, 0.9 * radius, "#ffffff");
+    drawMonthMarkers();
 }, 20);
 
 </script>
